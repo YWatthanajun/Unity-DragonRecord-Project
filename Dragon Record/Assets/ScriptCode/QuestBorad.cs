@@ -15,8 +15,11 @@ public class QuestBorad : MonoBehaviour
 
             if (hit.collider != null)
             {
-                audioSource.PlayOneShot(audioClip);
-                Debug.Log("Clicked on: " + hit.collider.gameObject.name);
+                if (hit.collider.gameObject.CompareTag("questBoard"))
+                {
+                    audioSource.PlayOneShot(audioClip);
+                    Debug.Log("Clicked on: " + hit.collider.gameObject.name);
+                }              
                 // Perform desired action when object is clicked
             }
         }
