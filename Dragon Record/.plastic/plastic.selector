@@ -1,0 +1,4 @@
+repository "Dragon Record@Dragon_Record@cloud"
+  path "/"
+    br "/main"
+    co "/main"
