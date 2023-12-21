@@ -139,8 +139,8 @@ GameObject:
   - component: {fileID: 104343700}
   - component: {fileID: 104343699}
   m_Layer: 6
-  m_Name: BoradMain
-  m_TagString: Untagged
+  m_Name: BoardMain
+  m_TagString: questBoard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1562,7 +1562,7 @@ GameObject:
   - component: {fileID: 1784114009}
   - component: {fileID: 1784114008}
   - component: {fileID: 1784114007}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
