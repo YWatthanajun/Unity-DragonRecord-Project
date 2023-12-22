@@ -9,6 +9,7 @@ TagManager:
   - Canvas
   - QuestSloth
   - QuestPaper
+  - StartDayButton
   layers:
   - Default
   - TransparentFX
