@@ -21,17 +21,18 @@ public class PathFollow : MonoBehaviour
     {
         if (moveQuestBoard == true)
         {
-            transform.position = Vector2.MoveTowards(transform.position, Points[1].transform.position, moveSpeed * Time.deltaTime);
-            float distanceToTarget = Vector2.Distance(transform.position, Points[1].transform.position);
+            transform.position = Vector2.MoveTowards(transform.position, Points[pointsIndex].transform.position, moveSpeed * Time.deltaTime);
+            float distanceToTarget = Vector2.Distance(transform.position, Points[pointsIndex].transform.position);
             if (distanceToTarget <= float.Epsilon)
             {
-                moveQuestBoard = false;
+                //moveQuestBoard = false;
+                pointsIndex ++;
                 //acceptQuest = true;
             }
         }
         if (acceptQuest == true)
         {
-            transform.position = Vector2.MoveTowards(transform.position, Points[2].transform.position, moveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, Points[4].transform.position, moveSpeed * Time.deltaTime);
             float distanceToTarget = Vector2.Distance(transform.position, Points[pointsIndex].transform.position);
             if (distanceToTarget <= float.Epsilon)
             {
