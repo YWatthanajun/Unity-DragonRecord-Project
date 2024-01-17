@@ -5,14 +5,12 @@ using UnityEngine.EventSystems;
 
 public class QuestSloth : MonoBehaviour, IDropHandler 
 {
-    public QuestLevel QuestLevel;
 
     public void OnDrop(PointerEventData eventData) {
         Debug.Log("OnDrop");
         if (eventData.pointerDrag != null) //ตรวจสอบว่า มีวัตถุที่ลากจริงรึเปล่า
         {
             eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition; // ย้ายตำแหน่ง GameObject ไปยังช่อง QuestSloth
-            QuestBoradManager.Instance.Add(QuestLevel);
         }
     }
 }
