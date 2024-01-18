@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuestPickup : MonoBehaviour
+public class ItemPickup : MonoBehaviour
 {
-    public QuestLevel QuestLevel;
+    public Item Item;
 
     void Pickup()
     {
-        QuestBoradManager.Instance.Add(QuestLevel);
+        InventoryManager.Instance.Add(Item);
         Destroy(gameObject);
     }
 

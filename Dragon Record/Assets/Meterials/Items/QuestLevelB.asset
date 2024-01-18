@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a80e70875b46ff6489177bc0dbe5ecf0, type: 3}
-  m_Name: QuestLevel_B
+  m_Script: {fileID: 11500000, guid: c19bef5301c980d478b7ccad963b7348, type: 3}
+  m_Name: QuestLevelB
   m_EditorClassIdentifier: 
   id: 3
   itemName: Quest B
+  levelQuest: 3
   icon: {fileID: 21300000, guid: 0c81080252138f24eba89720e36e2568, type: 3}
