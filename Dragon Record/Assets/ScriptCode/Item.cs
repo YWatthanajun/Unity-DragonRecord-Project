@@ -7,4 +7,5 @@ public class Item : ScriptableObject
     public string itemName;
     public int levelQuest;
     public Sprite icon;
+    public int compartmentId;
 }

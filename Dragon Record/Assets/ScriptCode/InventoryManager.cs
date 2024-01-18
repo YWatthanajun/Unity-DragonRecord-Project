@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
+
     public List<Item> Items = new List<Item>();
     public Transform ItemContent;
-    public GameObject InventoryItem;
+    public GameObject InventoryItemPrefab;
     public Toggle EnableRemove;
-    public InventoryItemController[] InventoryItems;
+
 
     private void Awake()
     {
@@ -20,11 +21,13 @@ public class InventoryManager : MonoBehaviour
     public void Add(Item item)
     {
         Items.Add(item);
+        ListItems();
     }
 
     public void Remove(Item item)
     {
         Items.Remove(item);
+        ListItems();
     }
 
     public void ListItems()
@@ -37,77 +40,59 @@ public class InventoryManager : MonoBehaviour
 
         foreach (var item in Items)
         {
-            if (InventoryItem != null && ItemContent != null)
+            if (InventoryItemPrefab != null && ItemContent != null)
             {
-                GameObject obj = Instantiate(InventoryItem, ItemContent);
+                GameObject obj = Instantiate(InventoryItemPrefab, ItemContent);
 
-                // Check if obj is not null before accessing its components.
                 if (obj != null)
                 {
-                    var itemNameTransform = obj.transform.Find("ItemName");
-
-                    // Check if itemNameTransform is not null before accessing its component.
-                    var itemName = itemNameTransform?.GetComponent<Text>();
-
-                    var itemIconTransform = obj.transform.Find("ItemIcon");
-
-                    // Check if itemIconTransform is not null before accessing its component.
-                    var itemIcon = itemIconTransform?.GetComponent<Image>();
-
-                    var removeButton = obj.transform.Find("RemoveButton").GetComponent<Button>();
+                    var itemName = obj.transform.Find("ItemName")?.GetComponent<Text>();
+                    var itemIcon = obj.transform.Find("ItemIcon")?.GetComponent<Image>();
+                    var removeButton = obj.transform.Find("RemoveButton")?.GetComponent<Button>();
 
                     if (itemName != null && itemIcon != null)
                     {
                         itemName.text = item.itemName;
                         itemIcon.sprite = item.icon;
-                    }
-                    else if (EnableRemove.isOn)
-                    {
-                        removeButton.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("ItemName or ItemIcon not found in the InventoryItem prefab.");
-                    }
+                    }                   
                 }
                 else
                 {
-                    Debug.LogWarning("InventoryItem not instantiated properly.");
+                    Debug.LogWarning("InventoryItemPrefab not instantiated properly.");
                 }
             }
             else
             {
-                Debug.LogWarning("InventoryItem or ItemContent not assigned in the inspector.");
-            }
-        }
-        SetInventoryItems();
-    }
-
-    public void EnableItemsRemove()
-    {
-        if (EnableRemove.isOn)
-        {
-            foreach (Transform item in ItemContent)
-            {
-                item.Find("RemoveButton").gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            foreach (Transform item in ItemContent)
-            {
-                item.Find("RemoveButton").gameObject.SetActive(false);
+                Debug.LogWarning("InventoryItemPrefab or ItemContent not assigned in the inspector.");
             }
         }
     }
+    //public void EnableItemsRemove()
+    //{
+    //    if (EnableRemove.isOn)
+    //    {
+    //        foreach (Transform item in ItemContent)
+    //        {
+    //            item.Find("RemoveButton").gameObject.SetActive(true);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        foreach (Transform item in ItemContent)
+    //        {
+    //            item.Find("RemoveButton").gameObject.SetActive(false);
+    //        }
+    //    }
+    //}
 
-    public void SetInventoryItems()
-    {
-        InventoryItems = ItemContent.GetComponentsInChildren<InventoryItemController>();
+    //public void SetInventoryItems()
+    //{
+    //    InventoryItems = ItemContent.GetComponentsInChildren<InventoryItemController>();
 
-        for (int i = 0; i < Items.Count; i++)
-        {
-            InventoryItems[i].AddItem(Items[i]);
-        }
-    }
+    //    for (int i = 0; i < Items.Count; i++)
+    //    {
+    //        InventoryItems[i].AddItem(Items[i]);
+    //    }
+    //}
 }
+
