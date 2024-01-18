@@ -27,9 +27,20 @@ public class Camera_Control : MonoBehaviour
         {
             Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
 
-            print("origin" + dragOrigin + "newPosition" + cam.ScreenToWorldPoint(Input.mousePosition) + "=difference" + difference);
-
             cam.transform.position += difference;
+
+            // Clamp camera position to screen boundaries
+            float boundaryWidth = cam.orthographicSize * Screen.width / Screen.height;
+            float leftBoundary = -boundaryWidth / 2;
+            float rightBoundary = boundaryWidth / 2;
+            float topBoundary = cam.orthographicSize / 2;
+            float bottomBoundary = -cam.orthographicSize / 2;
+
+            cam.transform.position = new Vector3(
+                Mathf.Clamp(cam.transform.position.x, leftBoundary, rightBoundary),
+                Mathf.Clamp(cam.transform.position.y, bottomBoundary, topBoundary),
+                cam.transform.position.z
+            );
         }
     }
 
