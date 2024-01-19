@@ -4,8 +4,9 @@ using UnityEngine;
 public class Item : ScriptableObject
 {
     public int id;
-    public string itemName;
+    public string QuestName;
     public int levelQuest;
     public Sprite icon;
-    public int compartmentId;
+    public string description;
+    public int reward;
 }

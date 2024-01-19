@@ -8,6 +8,8 @@ public class QuestBoard : MonoBehaviour
     public AudioSource audioSource;
     public float interactRange;
     public GameObject questUIPanel;
+  
+
 
     void Update()
     {
@@ -60,4 +62,6 @@ public class QuestBoard : MonoBehaviour
         questUIPanel.SetActive(false);
         Time.timeScale = 1f; // Resume the game
     }
+
+ 
 }

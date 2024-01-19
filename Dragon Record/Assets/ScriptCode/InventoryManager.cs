@@ -52,7 +52,7 @@ public class InventoryManager : MonoBehaviour
 
                     if (itemName != null && itemIcon != null)
                     {
-                        itemName.text = item.itemName;
+                        itemName.text = item.QuestName;
                         itemIcon.sprite = item.icon;
                     }                   
                 }

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: QuestLevelD
   m_EditorClassIdentifier: 
   id: 1
-  itemName: Quest D
+  QuestName: Rank D
   levelQuest: 1
   icon: {fileID: 21300000, guid: 33cfd13c102c4a043be6de6e769ff63a, type: 3}
+  description: Kill 10 Slime
+  reward: 10
