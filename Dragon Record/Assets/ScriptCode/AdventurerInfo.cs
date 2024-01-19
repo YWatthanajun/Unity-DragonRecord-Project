@@ -19,7 +19,7 @@ public class AdventurerInfo : MonoBehaviour
         // If the adventurer has a current quest, update the quest text
         if (adventurer.currentQuest != null)
         {
-            questText.text = "Quest: " + adventurer.currentQuest.name;
+            questText.text = "Quest: " + adventurer.currentQuest.QuestName;
         }
         else
         {

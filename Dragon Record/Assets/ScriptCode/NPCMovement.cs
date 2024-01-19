@@ -1,13 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.UI;
 
 public class NPCMovement : MonoBehaviour
 {
     public Transform questBoard;
     public Transform guildCounter;
+    public Transform exitArea;
     public float moveSpeed = 2f;
     public Adventurer adventurer;
+    public GameObject checkQuest;
+    public int confirm;
+    public ChackQuestManager chackQuestManager;
+    public GameObject UIcheck;
+    public Animator anim;
+    //public AdventurerInfo adventurerInfo;
 
     public void StartDay()
     {
@@ -17,6 +25,15 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator MoveToQuestBoard()
     {
+        if (anim == null)
+        {
+            Debug.LogError("Animator is not assigned to NPCMovement script.");
+            yield break;
+        }
+
+        Debug.Log("Triggering PickUp_NPC_01 animation.");
+        anim.SetTrigger("PickUp_NPC_01");
+
         while (adventurer.currentQuest == null)
         {
             // Move to the quest board to pick up a quest
@@ -29,11 +46,13 @@ public class NPCMovement : MonoBehaviour
 
                 // Assign the quest to the Adventurer's currentQuest variable
                 adventurer.currentQuest = quest;
+                InventoryManager.Instance.Remove(quest);
 
                 // Display a message that the NPC has picked up a quest
                 Debug.Log(gameObject.name + " has picked up the quest: " + quest.QuestName);
 
                 // Wait for 3 seconds
+                //anim.SetTrigger("PickUpQuest");
                 yield return new WaitForSeconds(3.0f);
             }
 
@@ -46,6 +65,7 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator MoveToGuildCounter()
     {
+        //adventurerInfo.questText.text("");
         while (transform.position != guildCounter.position)
         {
             // Move to the guild counter
@@ -56,12 +76,56 @@ public class NPCMovement : MonoBehaviour
 
         // Display a message that the NPC has reached the guild counter
         Debug.Log(gameObject.name + " has reached the guild counter with the quest: " + adventurer.currentQuest.QuestName);
+        chack();
 
-        // Notify the player that the NPC has brought a quest to the guild counter
-        // and allow the player to check if the quest is suitable for the NPC's level
-        // ...
+        // Move to the exit area
+    }
 
-        // Clear the current quest
-        adventurer.currentQuest = null;
+    IEnumerator MoveToExitArea()
+    {
+        yield return new WaitForSeconds(1.0f);
+        while (transform.position != exitArea.position)
+        {
+            // Move to the exit area
+            transform.position = Vector2.MoveTowards(transform.position, exitArea.position, moveSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        // Display a message that the NPC has reached the exit area
+        Debug.Log(gameObject.name + " has reached the exit area and disappeared.");
+
+        // Disable the NPC's GameObject
+        gameObject.SetActive(false);
+    }
+
+    public void chack()
+    {
+        checkQuest.SetActive(true);
+    }
+
+    public void confirmQuest()
+    {
+        UIcheck.SetActive(false);
+        Vector3 scale = transform.localScale;
+        // Flip the object along the X-axis by negating the X scale
+        scale.x = -scale.x;
+        // Apply the new scale to the object
+        transform.localScale = scale;
+
+        confirm = chackQuestManager.confirmValue;
+        if (confirm == 1)
+        {
+            Debug.Log(" Confirm Quest ");
+
+            StartCoroutine(MoveToExitArea());
+        }
+        else if (confirm == 2)
+        {
+            Debug.Log("Reject Quest ");
+            InventoryManager.Instance.Add(adventurer.currentQuest);
+            adventurer.currentQuest = null;
+            StartCoroutine(MoveToExitArea());
+        }
     }
 }
