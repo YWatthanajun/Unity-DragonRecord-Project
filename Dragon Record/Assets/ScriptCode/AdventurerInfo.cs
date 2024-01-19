@@ -21,7 +21,7 @@ public class AdventurerInfo : MonoBehaviour
         {
             questText.text = "Quest: " + adventurer.currentQuest.QuestName;
         }
-        else
+        else if (adventurer.currentQuest == null)
         {
             questText.text = "Quest: None";
         }

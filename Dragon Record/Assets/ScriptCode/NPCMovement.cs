@@ -15,7 +15,11 @@ public class NPCMovement : MonoBehaviour
     public ChackQuestManager chackQuestManager;
     public GameObject UIcheck;
     public Animator anim;
-    //public AdventurerInfo adventurerInfo;
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     public void StartDay()
     {
@@ -25,46 +29,56 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator MoveToQuestBoard()
     {
-        if (anim == null)
-        {
-            Debug.LogError("Animator is not assigned to NPCMovement script.");
-            yield break;
-        }
+        //if (anim == null)
+        //{
+        //    Debug.LogError("Animator is not assigned to NPCMovement script.");
+        //    yield break;
+        //}
 
-        Debug.Log("Triggering PickUp_NPC_01 animation.");
-        anim.SetTrigger("PickUp_NPC_01");
+        //Debug.Log("Triggering PickUp_NPC_01 animation.");
+        //anim.SetTrigger("PickUp_NPC_01");
 
         while (adventurer.currentQuest == null)
         {
             // Move to the quest board to pick up a quest
             transform.position = Vector2.MoveTowards(transform.position, questBoard.position, moveSpeed * Time.deltaTime);
-
+            anim.SetBool("isWalk", true);
             if (transform.position == questBoard.position)
             {
-                // Pick up a random quest from the quest board
-                Item quest = InventoryManager.Instance.Items[Random.Range(0, InventoryManager.Instance.Items.Count)];
+                anim.SetBool("isWalk", false);
+                if (InventoryManager.Instance.Items.Count == 0)
+                {
+                    Debug.Log(" NoQuest ");
+                    yield return new WaitForSeconds(3.0f);
+                    yield return null;
+                    confirmQuest();
+                }
+                else
+                {
+                    // Pick up a random quest from the quest board
+                    Item quest = InventoryManager.Instance.Items[Random.Range(0, InventoryManager.Instance.Items.Count)];
 
-                // Assign the quest to the Adventurer's currentQuest variable
-                adventurer.currentQuest = quest;
-                InventoryManager.Instance.Remove(quest);
+                    // Assign the quest to the Adventurer's currentQuest variable
+                    adventurer.currentQuest = quest;
+                    InventoryManager.Instance.Remove(quest);
 
-                // Display a message that the NPC has picked up a quest
-                Debug.Log(gameObject.name + " has picked up the quest: " + quest.QuestName);
+                    // Display a message that the NPC has picked up a quest
+                    Debug.Log(gameObject.name + " has picked up the quest: " + quest.QuestName);
 
-                // Wait for 3 seconds
-                //anim.SetTrigger("PickUpQuest");
-                yield return new WaitForSeconds(3.0f);
+                    // Wait for 3 seconds
+                    yield return new WaitForSeconds(3.0f);
+                }
             }
-
             yield return null;
         }
-
+        anim.SetBool("isPickUp", false);
         // Move to the guild counter to have the player check the quest level
         StartCoroutine(MoveToGuildCounter());
     }
 
     IEnumerator MoveToGuildCounter()
     {
+        anim.SetBool("isWalk", true);
         //adventurerInfo.questText.text("");
         while (transform.position != guildCounter.position)
         {
@@ -73,7 +87,7 @@ public class NPCMovement : MonoBehaviour
 
             yield return null;
         }
-
+        anim.SetBool("isWalk", false);
         // Display a message that the NPC has reached the guild counter
         Debug.Log(gameObject.name + " has reached the guild counter with the quest: " + adventurer.currentQuest.QuestName);
         chack();
@@ -83,18 +97,29 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator MoveToExitArea()
     {
+        anim.SetBool("isWalk", true);
+        Transform childTransform = transform.Find("Root"); // Replace with the actual child object's name
+        if (childTransform != null)
+        {
+            Vector3 childScale = childTransform.localScale;
+            // Flip the object along the X-axis by negating the X scale
+            childScale.x = -childScale.x;
+            // Apply the new scale to the child object
+            childTransform.localScale = childScale;
+        }
+
         yield return new WaitForSeconds(1.0f);
         while (transform.position != exitArea.position)
         {
             // Move to the exit area
-            transform.position = Vector2.MoveTowards(transform.position, exitArea.position, moveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, exitArea.position, (moveSpeed * 1.75f) * Time.deltaTime);
 
             yield return null;
         }
 
         // Display a message that the NPC has reached the exit area
         Debug.Log(gameObject.name + " has reached the exit area and disappeared.");
-
+        anim.SetBool("isWalk", false);
         // Disable the NPC's GameObject
         gameObject.SetActive(false);
     }
@@ -106,13 +131,8 @@ public class NPCMovement : MonoBehaviour
 
     public void confirmQuest()
     {
+        anim.SetBool("isPickUp", false);
         UIcheck.SetActive(false);
-        Vector3 scale = transform.localScale;
-        // Flip the object along the X-axis by negating the X scale
-        scale.x = -scale.x;
-        // Apply the new scale to the object
-        transform.localScale = scale;
-
         confirm = chackQuestManager.confirmValue;
         if (confirm == 1)
         {
@@ -125,6 +145,10 @@ public class NPCMovement : MonoBehaviour
             Debug.Log("Reject Quest ");
             InventoryManager.Instance.Add(adventurer.currentQuest);
             adventurer.currentQuest = null;
+            StartCoroutine(MoveToExitArea());
+        }
+        else
+        {
             StartCoroutine(MoveToExitArea());
         }
     }
