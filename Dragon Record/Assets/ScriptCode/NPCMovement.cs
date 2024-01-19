@@ -15,6 +15,9 @@ public class NPCMovement : MonoBehaviour
     public ChackQuestManager chackQuestManager;
     public GameObject UIcheck;
     public Animator anim;
+    public QueueManager queue;
+    public bool start;
+    public int isStart;
 
     private void Start()
     {
@@ -23,8 +26,15 @@ public class NPCMovement : MonoBehaviour
 
     public void StartDay()
     {
-        // Start the NPC's movement
-        StartCoroutine(MoveToQuestBoard());
+        start = true;
+    }
+    private void Update()
+    {
+        if (adventurer.Queue == queue.QueueAdven && start == true && isStart == 0)
+        {
+            isStart = 1;
+            StartCoroutine(MoveToQuestBoard());
+        }
     }
 
     IEnumerator MoveToQuestBoard()
@@ -90,6 +100,9 @@ public class NPCMovement : MonoBehaviour
         anim.SetBool("isWalk", false);
         // Display a message that the NPC has reached the guild counter
         Debug.Log(gameObject.name + " has reached the guild counter with the quest: " + adventurer.currentQuest.QuestName);
+        checkQuest.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        yield return null;
         chack();
 
         // Move to the exit area
@@ -120,12 +133,14 @@ public class NPCMovement : MonoBehaviour
         // Display a message that the NPC has reached the exit area
         Debug.Log(gameObject.name + " has reached the exit area and disappeared.");
         anim.SetBool("isWalk", false);
+        queue.Queue();
         // Disable the NPC's GameObject
         gameObject.SetActive(false);
     }
 
     public void chack()
     {
+        Time.timeScale = 0f;
         checkQuest.SetActive(true);
     }
 
@@ -137,18 +152,15 @@ public class NPCMovement : MonoBehaviour
         if (confirm == 1)
         {
             Debug.Log(" Confirm Quest ");
-
+            chackQuestManager.ResetValue();
             StartCoroutine(MoveToExitArea());
         }
         else if (confirm == 2)
         {
             Debug.Log("Reject Quest ");
             InventoryManager.Instance.Add(adventurer.currentQuest);
+            chackQuestManager.ResetValue();
             adventurer.currentQuest = null;
-            StartCoroutine(MoveToExitArea());
-        }
-        else
-        {
             StartCoroutine(MoveToExitArea());
         }
     }

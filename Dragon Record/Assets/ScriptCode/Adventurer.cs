@@ -7,4 +7,5 @@ public class Adventurer : MonoBehaviour
     public string CharacterName;
     public int level;
     public Item currentQuest;
+    public int Queue;
 }
