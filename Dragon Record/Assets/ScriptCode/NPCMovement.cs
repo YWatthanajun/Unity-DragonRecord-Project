@@ -142,9 +142,15 @@ public class NPCMovement : MonoBehaviour
         // Display a message that the NPC has reached the exit area
         Debug.Log(gameObject.name + " has reached the exit area and disappeared.");
         anim.SetBool("isWalk", false);
+        if (x == 0)
+        {
+            TrustValue.add();
+            x++;
+        }
+        confirmQuest();
         queue.Queue();
         // Disable the NPC's GameObject
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     public void chack()
