@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.UI;
+//using UnityEditor.UI;
 
 public class NPCMovement : MonoBehaviour
 {
@@ -18,6 +18,8 @@ public class NPCMovement : MonoBehaviour
     public QueueManager queue;
     public bool start;
     public int isStart;
+    public trustValue TrustValue;
+    private int x = 0;
 
     private void Start()
     {
@@ -48,7 +50,7 @@ public class NPCMovement : MonoBehaviour
         //Debug.Log("Triggering PickUp_NPC_01 animation.");
         //anim.SetTrigger("PickUp_NPC_01");
 
-        while (adventurer.currentQuest == null)
+        while (adventurer.currentQuest.name == "blank")
         {
             // Move to the quest board to pick up a quest
             transform.position = Vector2.MoveTowards(transform.position, questBoard.position, moveSpeed * Time.deltaTime);
@@ -59,9 +61,16 @@ public class NPCMovement : MonoBehaviour
                 if (InventoryManager.Instance.Items.Count == 0)
                 {
                     Debug.Log(" NoQuest ");
+                    //adventurer.currentQuest = null;
                     yield return new WaitForSeconds(3.0f);
                     yield return null;
+                    if (x == 0)
+                    {
+                        TrustValue.minus();
+                        x++;
+                    }
                     confirmQuest();
+
                 }
                 else
                 {
@@ -135,7 +144,7 @@ public class NPCMovement : MonoBehaviour
         anim.SetBool("isWalk", false);
         queue.Queue();
         // Disable the NPC's GameObject
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public void chack()
@@ -146,7 +155,7 @@ public class NPCMovement : MonoBehaviour
 
     public void confirmQuest()
     {
-        anim.SetBool("isPickUp", false);
+        //anim.SetBool("isPickUp", false);
         UIcheck.SetActive(false);
         confirm = chackQuestManager.confirmValue;
         if (confirm == 1)
@@ -161,6 +170,10 @@ public class NPCMovement : MonoBehaviour
             InventoryManager.Instance.Add(adventurer.currentQuest);
             chackQuestManager.ResetValue();
             adventurer.currentQuest = null;
+            StartCoroutine(MoveToExitArea());
+        }
+        else
+        {
             StartCoroutine(MoveToExitArea());
         }
     }

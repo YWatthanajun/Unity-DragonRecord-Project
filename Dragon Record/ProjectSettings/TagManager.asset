@@ -10,6 +10,7 @@ TagManager:
   - QuestSloth
   - QuestPaper
   - StartDayButton
+  - BoardPos
   layers:
   - Default
   - TransparentFX
