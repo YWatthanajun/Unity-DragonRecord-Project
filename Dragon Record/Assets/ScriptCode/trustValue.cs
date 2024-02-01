@@ -18,6 +18,10 @@ public class trustValue : MonoBehaviour
             value = value - maxValue;
             maxValue = maxValue + 25;
         }
+        if (value <= 0)
+        {
+            
+        }
     }
 
     public void minus()
